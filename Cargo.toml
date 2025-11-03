@@ -1,0 +1,158 @@
+[package]
+name = "kodegen_simd"
+version = "0.1.0"
+edition = "2024"
+description = "KODEGEN.ᴀɪ: Database query and schema exploration MCP tools for AI agents."
+license = "Apache-2.0 OR MIT"
+authors = ["KODEGEN.ᴀɪ"]
+homepage = "https://kodegen.ai"
+repository = "https://github.com/cyrup-ai/kodegen-simd"
+readme = "README.md"
+categories = ["development-tools","api-bindings"]
+keywords = [
+    "mcp",
+    "client",
+    "agent",
+    "claude"
+]
+[dependencies]
+
+# Core SIMD support and zero-allocation data structures
+wide = "0.8"
+arrayvec = "0.7"
+smallvec = "2.0.0-alpha.11"
+
+# Hash map for token tracking and statistics
+dashmap = "6"
+ahash = "0.8"
+
+# Atomic operations and synchronization
+parking_lot = "0.12"
+crossbeam-utils = "0.8"
+
+# Random number generation for sampling
+rand = "0.9"
+
+# Fast exponential functions for softmax
+libm = "0.2"
+
+# Error handling
+thiserror = "2"
+anyhow = "1"
+
+# Lazy static initialization for runtime dispatch
+once_cell = "1"
+lazy_static = "1"
+
+# Parallel processing
+rayon = { version = "1", optional = true }
+
+tokenizers = "0.22"
+
+# JSON schema generation from serde types for constrained generation
+serde = { version = "1", features = ["derive"] }
+schemars = { version = "1", features = ["derive"] }
+serde_json = "1"
+regex = "1"
+regex-automata = "0.4"
+rustc-hash = "2"
+log = "0.4"
+cyrup_termcolor = "2"
+
+# — DSP / NN (base dependencies - no acceleration features) —
+candle-core = { version = "0.9.2-alpha.1", default-features = false }
+candle-nn = { version = "0.9.2-alpha.1", default-features = false }
+candle-transformers = { version = "0.9.2-alpha.1", default-features = false }
+
+# — Optional acceleration dependencies —
+half = { version = "2", optional = true }
+metal = { version = "0.32", optional = true }
+candle-metal-kernels = { version = "0.9.2-alpha.1", optional = true }
+cudarc = { version = "0.17", optional = true, default-features = false, features = [
+    "cublas",
+    "cublaslt", 
+    "cudnn",
+    "curand",
+    "dynamic-linking",
+    "f16",
+    "std",
+] }
+bindgen_cuda = { version = "0.1", optional = true }
+candle-kernels = { version = "0.9.2-alpha.1", optional = true }
+
+
+[features]
+# ───────────── default: metal acceleration enabled ─────────────
+default = ["reqwest_unstable"]
+
+# --- Developer conveniences (opt-in) -----------------------
+dev = ["debug"] # ← enable with `--features dev`
+debug = []                 # extra logging / assertions
+bench = []                 # benchmarking support
+
+# --- SIMD features ---
+portable_simd = []
+reqwest_unstable = []
+
+# --- Candle backend features (required for all candle crates) -----
+cuda = [
+    "dep:cudarc",
+    "dep:bindgen_cuda",
+    "dep:candle-kernels",
+    "candle-core/cuda",
+    "candle-nn/cuda",
+    "candle-transformers/cuda",
+]
+cudnn = ["cuda", "cudarc/cudnn"]
+metal = [
+    "dep:metal",
+    "dep:candle-metal-kernels",
+    "candle-core/metal",
+    "candle-nn/metal",
+    "candle-transformers/metal",
+]
+accelerate = [
+    "dep:accelerate-src",
+    "candle-core/accelerate",
+    "candle-nn/accelerate",
+    "candle-transformers/accelerate",
+]
+mkl = [
+    "dep:intel-mkl-src",
+    "candle-core/mkl",
+    "candle-nn/mkl",
+    "candle-transformers/mkl",
+]
+
+# OS-specific acceleration dependencies
+[target.'cfg(all(target_os = "linux", target_arch = "x86_64"))'.dependencies]
+intel-mkl-src = { version = "0.8", optional = true }
+
+[target.'cfg(all(target_os = "windows", target_arch = "x86_64"))'.dependencies]
+intel-mkl-src = { version = "0.8", optional = true }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+accelerate-src = { version = "0.3", optional = true }
+
+
+
+[dev-dependencies]
+criterion = "0.7"
+approx = "0.5"
+float_eq = "1"
+env_logger = "0.11"
+
+[[bench]]
+name = "temperature"
+harness = false
+required-features = ["bench"]
+
+[[bench]]
+name = "argmax"
+harness = false
+required-features = ["bench"]
+
+[[bench]]
+name = "softmax"
+harness = false
+required-features = ["bench"]
