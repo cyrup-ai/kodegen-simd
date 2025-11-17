@@ -60,7 +60,8 @@ fn apply_frequency_penalty(
     penalty: f32,
 ) -> LogitsResult<()> {
     // Count token frequencies
-    let mut freqs = SmallVec::<u32, 512>::from_elem(0, logits.len().min(512));
+    let mut freqs: SmallVec<u32, 512> = std::iter::repeat_n(0, logits.len().min(512))
+        .collect();
     for &token in token_history {
         if (token as usize) < freqs.len() {
             freqs[token as usize] += 1;
