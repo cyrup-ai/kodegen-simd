@@ -1,8 +1,8 @@
 [package]
 name = "kodegen_simd"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2024"
-description = "KODEGEN.ᴀɪ: Database query and schema exploration MCP tools for AI agents."
+description = "KODEGEN.ᴀɪ: SIMD optimization library"
 license = "Apache-2.0 OR MIT"
 authors = ["KODEGEN.ᴀɪ"]
 homepage = "https://kodegen.ai"
@@ -13,7 +13,8 @@ keywords = [
     "mcp",
     "client",
     "agent",
-    "claude"
+    "claude",
+    "simd"
 ]
 [dependencies]
 

@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="assets/img/banner.png" alt="Kodegen AI Banner" width="100%" />
+</div>
+
 # kodegen_simd
 
 [![Crates.io](https://img.shields.io/crates/v/kodegen_simd.svg)](https://crates.io/crates/kodegen_simd)
@@ -254,4 +258,3 @@ at your option.
 ## Acknowledgments
 
 Part of the [KODEGEN.ᴀɪ](https://kodegen.ai) ecosystem for AI-powered database tools and MCP servers.
-
