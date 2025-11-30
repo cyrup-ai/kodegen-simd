@@ -22,7 +22,7 @@ fn scalar_argmax(logits: &[f32]) -> SimdResult<usize> {
     for (i, &val) in logits.iter().enumerate().skip(1) {
         if val > max_val {
             max_val = val;
-            max_idx = i;
+            max_idx = i + 1;
         }
     }
 

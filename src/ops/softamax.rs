@@ -83,7 +83,7 @@ pub fn argmax_simd(logits: &[f32]) -> usize {
     for (idx, &val) in logits.iter().enumerate().skip(i) {
         if val > max_val {
             max_val = val;
-            max_idx = idx;
+            max_idx = idx + i;
         }
     }
 
